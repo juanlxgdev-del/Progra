@@ -1,0 +1,26 @@
+from sistema import *
+
+prod1=Producto("Laptop",8400,30)
+prod2=Producto("Mouse",250,100)
+prod3=Producto("Teclado",450,80)
+prod4=Producto("Monitor",3200,40)
+prod5=Producto("Impresora",2800,20)
+prod6=Producto("Audifonos",600,70)
+prod7=Producto("Webcam",900,35)
+prod8=Producto("Disco Duro",1500,50)
+prod9=Producto("Memoria USB",180,200)
+prod10=Producto("Router",1200,45)
+
+cat1=Categoria("Computacion")
+cat1.agregar_producto(prod1)
+cat1.agregar_producto(prod2)
+cat1.agregar_producto(prod3)
+cat1.agregar_producto(prod4)
+cat1.agregar_producto(prod5)
+cat1.agregar_producto(prod6)
+cat1.agregar_producto(prod7)
+cat1.agregar_producto(prod8)
+cat1.agregar_producto(prod9)
+cat1.agregar_producto(prod10)
+
+cat1.valor_total_categoria()
