@@ -4,4 +4,5 @@ ventana=tk.Tk()
 ventana.title("Mi primera venta")
 etiqueta=tk.Label(ventana,text="Hola clase")
 etiqueta.pack(pady=20)
+
 ventana.mainlioop()
