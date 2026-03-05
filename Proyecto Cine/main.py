@@ -101,7 +101,7 @@ productos = [
 # Crear zona de comida
 zona_comida = ZonaComida(1, "Concesion Principal", "Entrada principal")
 for productoo in productos:
-    zona_comida.agregar_producto(productoo)
+    zona_comida.agregar(productoo)
 
 # Variables chachipistachis para el manejo de sesiones (ayuda profe jimmy, esto esta hecho horrible)
 usuario_actual = None
@@ -353,3 +353,4 @@ def menu_principal():
 if __name__ == "__main__":
 
     menu_principal()
+
