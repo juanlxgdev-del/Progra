@@ -16,13 +16,16 @@ class Persona:
         self.ema = ema
         self.tel = tel
         self.activo = False
+        self.email = ema
+        self.nombre = nom
+        self.telefono = tel
 
     # Si este login funciona a la primera voy a fingir que siempre supe hacerlo
     # si no funciona… bueno, culpare al sueño acumulado.
 
     def login(self):
         self.activo = True
-        return f"{self.nom} entró" ;
+        return f"{self.nom} entró"
 
     def logout(self):
         self.activo = False
@@ -36,6 +39,9 @@ class Persona:
         self.nom = nom
         self.ema = ema
         self.tel = tel
+        self.email = ema
+        self.nombre = nom
+        self.telefono = tel
         return f"datos actualizados bla bla para {self.nom}"
 
 
@@ -49,6 +55,8 @@ class Usuario(Persona):
         self.puntos = 0
         self.reservas_viejas = []
         self.reservas_activas = []
+        self.puntos_fidelidad = 0
+        self.historial_reservas = []
 
     # Esta funcion crea reservas
     # no voy a mentir, esta parte me hizo pensar mas de lo que esperaba.
@@ -74,13 +82,18 @@ class Usuario(Persona):
         
         self.reservas_viejas.append(res)
         self.reservas_activas.append(res)
+        self.historial_reservas.append(res)
 
         # puntos de fidelidad
         # creo que esto esta bien… CREO.
 
         self.puntos += int((func.precio * cant_asientos) / 10)
+        self.puntos_fidelidad = self.puntos
         
         return res
+
+    def crear_reserva(self, func, cant_asientos):
+        return self.hacer_reserva(func, cant_asientos)
 
     # Mostrar puntos
     # aqui ya estaba medio cansado pero queria que funcionara.
@@ -97,8 +110,15 @@ class Usuario(Persona):
                 r.estado = 'CANCELADA'
                 self.reservas_activas.remove(r)
                 self.puntos -= int(r.precio_total / 10)
+                self.puntos_fidelidad = self.puntos
                 return True
         return False
+
+    def cancelar_reserva(self, id_res):
+        return self.cancelar(id_res)
+
+    def marcar_entrada(self):
+        return self.login()
 
 
 # Cambio de clase
@@ -115,6 +135,9 @@ class Empleado(Persona):
     def entrada(self):
         return f"{self.nom} ({self.rol}) llegó - {self.hor}"
     
+    def marcar_entrada(self):
+        return self.entrada()
+    
     # Aqui solo el admin puede gestionar funciones
     # logica sencilla para no complicarme la vida mas de lo necesario.
 
@@ -122,6 +145,9 @@ class Empleado(Persona):
         if self.rol == "ADMIN":
             return f"Función {funcion.id} ({funcion.peli.titulo}) gestionada"
         return f'{self.nom} no puede'
+
+    def gestionar_funciones(self, funcion):
+        return self.puede_gestionar(funcion)
 
 
 # Parte de peliculas
@@ -135,6 +161,8 @@ class Pelicula:
         self.clas = clas
         self.gen = gen
         self.sin = sin
+        self.duracion = dur
+        self.obtener_sinopsis = lambda: self.sinopsis()
     
     def sinopsis(self):
         return f"{self.titulo}: {self.sin}"
@@ -155,6 +183,7 @@ class Espacio:
         self.nom = nom
         self.ubi = ubi
         self.ok = True
+        self.nombre = nom
 
     def esta_ok(self):
         return self.ok
@@ -175,6 +204,7 @@ class Sala(Espacio):
         self.cap = cap
         self.vip = vip
         self.asientos = self._generar()
+        self.tipo = tip
 
     # Generar asientos automaticamente fue idea para no escribirlos uno por uno
     # porque si lo hacia manual probablemente seguiria aqui mañana.
@@ -212,7 +242,13 @@ class Sala(Espacio):
         for a in lista:
             if a in self.asientos:
                 self.asientos[a] = "ok"
+
+    def liberar_asientos(self, lista):
+        return self.devolver_asientos(lista)
     
+    def calcular_asientos_disponibles(self):
+        return self.libres()
+
     def __str__(self):
         libres = self.libres()
         tipo_vip = "VIP" if self.vip else "normal"
@@ -228,9 +264,11 @@ class ZonaComida(Espacio):
         super().__init__(id, nom, ubi)
         self.productos = []
         self.stock = {}
+        self.lista_productos = []
     
     def agregar(self, prod):
         self.productos.append(prod)
+        self.lista_productos.append(prod)
         self.stock[prod.id] = prod.cant
     
     def vender(self, id_prod, cant):
@@ -275,12 +313,16 @@ class Funcion:
         self.sala = sala
         self.hor = hor
         self.precio = precio
+        self.precio_base = precio
     
     def dame_asientos_libres(self):
         return self.sala.libres()
     
     def dame_asientos(self, cant):
         return self.sala.dame_asientos(cant)
+
+    def calcular_asientos_disponibles(self):
+        return self.dame_asientos_libres()
     
     def info(self):
         return f'{self.peli.titulo} - {self.hor} - Sala {self.sala.nom} - ${self.precio}'
@@ -308,6 +350,72 @@ class Promo:
 
 # Ultima clase grande: Reserva
 # si el programa llega hasta aqui sin explotar ya es victoria personal.
+
+class Reserva:
+    def __init__(self, id, usr, func, asi, precio):
+        self.id = id
+        self.usr = usr
+        self.func = func
+        self.asi = asi
+        self.precio_total = precio
+        self.estado = 'PENDIENTE'
+        self.asientos = asi
+        self.costo_total = precio
+        self.id_reserva = id
+        self.funcion = func
+    
+    def pagar(self):
+        if self.estado == "PENDIENTE":
+            self.estado = "PAGADA"
+            return True
+        return False
+
+    def confirmar_pago(self):
+        return self.pagar()
+    
+    # generar ticket sencillo
+
+    def ticket(self):
+        ticket = f"""
+    ================================
+            TICKET DEL CINE
+    ================================
+    
+    Reserva: {self.id}
+    Cliente: {self.usr.nom}
+    Email: {self.usr.ema}
+    
+    Pelicula: {self.func.peli.titulo}
+    Sala: {self.func.sala.nom}
+    Hora: {self.func.hor}
+    Asientos: {', '.join(self.asi)}
+    Total: ${self.precio_total:.2f}
+    Estado: {self.estado}
+    
+    ================================
+"""
+        return ticket
+
+    def generar_ticket(self):
+        return self.ticket()
+    
+    def usar_promo(self, promo):
+        desc = self.precio_total - promo.aplicar(self.precio_total)
+        self.precio_total = promo.aplicar(self.precio_total)
+        return desc
+    
+    def cambiar_estado(self, est):
+        self.estado = est
+    
+    def __str__(self):
+        return f"Reserva {self.id} - {self.usr.nom} - {self.func.peli.titulo} - {self.estado}"
+
+
+# Fin del archivo
+# Profe Jimmy, gracias por revisar el codigo.
+# Despues de entregar esto me voy directo a estudiar
+# para Ariza y calculo diferencial con Zamora.
+# Deséeme suerte.
 
 class Reserva:
     def __init__(self, id, usr, func, asi, precio):
@@ -363,4 +471,5 @@ class Reserva:
 # Profe Jimmy, gracias por revisar el codigo.
 # Despues de entregar esto me voy directo a estudiar
 # para Ariza y calculo diferencial con Zamora.
+
 # Deséeme suerte.
