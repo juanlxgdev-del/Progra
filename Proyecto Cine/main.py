@@ -1,4 +1,33 @@
 from models import *
+
+# Crear empleados
+empleados = [
+Empleado(1, "Natanael Cano", "nata@auracine.com", "6621234567", "EMP101", "ADMIN", "16:00-00:00"),
+Empleado(2, "Peso Pluma", "hassan@auracine.com", "3312345678", "EMP102", "TAQUILLERO", "18:00-02:00"),
+Empleado(3, "Luis Miguel", "elsol@auracine.com", "5551234567", "EMP103", "ADMIN", "20:00-04:00"),
+Empleado(4, "Christian Nodal", "nodal@auracine.com", "6371234567", "EMP104", "LIMPIEZA", "09:00-17:00"),
+Empleado(5, "Carín León", "carin@auracine.com", "6629876543", "EMP105", "TAQUILLERO", "10:00-18:00"),
+Empleado(6, "Juan Gabriel", "juanga@auracine.com", "6561112222", "EMP106", "ADMIN", "14:00-22:00"),
+Empleado(7, "Vicente Fernández", "chente@auracine.com", "3334445555", "EMP107", "LIMPIEZA", "06:00-14:00"),
+Empleado(8, "Thalía", "thalia@auracine.com", "5512223333", "EMP108", "TAQUILLERO", "08:00-16:00"),
+Empleado(9, "Junior H", "juniorh@auracine.com", "6645556666", "EMP109", "LIMPIEZA", "22:00-06:00"),
+Empleado(10, "Paulina Rubio", "pau@auracine.com", "5598887777", "EMP110", "TAQUILLERO", "11:00-19:00"),
+]
+
+# Crear usuarios
+usuarios = [
+    Usuario(1, "Doom Slayer", "doom@infierno.com", "+1 555-666-7777"),
+    Usuario(2, "Dante", "dante@devilmaycry.com", "+39 345 678 9012"),
+    Usuario(3, "Leon S. Kennedy", "leon@bsaa.com", "+1 202-555-0199"),
+    Usuario(4, "CJ", "cj@grovestreet.com", "+1 213-555-8923"),
+    Usuario(5, "Michael De Santa", "michael@vapid.com", "+1 310-555-4721"),
+    Usuario(6, "Franklin Clinton", "franklin@chop.com", "+1 323-555-1684"),
+    Usuario(7, "Steve", "steve@minecraft.com", "+44 20 7946 0123"),
+    Usuario(8, "Trevor Philips", "trevor@tpi.com", "+1 559-555-3287"),
+    Usuario(9, "Nick", "nick@left4dead.com", "+1 702-555-2165"),
+    Usuario(10, "Peter Parker", "spiderman@dailybugle.com", "+1 212-555-8976"),
+]
+
 # Peliculas
 peliculas = [
     Pelicula(1, "Avatar", 192, "PG-13", "Ciencia Ficcion", "Un soldado infiltrado en el planeta Pandora"),
@@ -73,34 +102,6 @@ productos = [
 zona_comida = ZonaComida(1, "Concesion Principal", "Entrada principal")
 for productoo in productos:
     zona_comida.agregar_producto(productoo)
-
-# Crear usuarios
-usuarios = [
-    Usuario(1, "Doom Slayer", "doom@infierno.com", "+1 555-666-7777"),
-    Usuario(2, "Dante", "dante@devilmaycry.com", "+39 345 678 9012"),
-    Usuario(3, "Leon S. Kennedy", "leon@bsaa.com", "+1 202-555-0199"),
-    Usuario(4, "CJ", "cj@grovestreet.com", "+1 213-555-8923"),
-    Usuario(5, "Michael De Santa", "michael@vapid.com", "+1 310-555-4721"),
-    Usuario(6, "Franklin Clinton", "franklin@chop.com", "+1 323-555-1684"),
-    Usuario(7, "Steve", "steve@minecraft.com", "+44 20 7946 0123"),
-    Usuario(8, "Trevor Philips", "trevor@tpi.com", "+1 559-555-3287"),
-    Usuario(9, "Nick", "nick@left4dead.com", "+1 702-555-2165"),
-    Usuario(10, "Peter Parker", "spiderman@dailybugle.com", "+1 212-555-8976"),
-]
-
-# Crear empleados
-empleados = [
-Empleado(1, "Natanael Cano", "nata@auracine.com", "6621234567", "EMP101", "ADMIN", "16:00-00:00"),
-Empleado(2, "Peso Pluma", "hassan@auracine.com", "3312345678", "EMP102", "TAQUILLERO", "18:00-02:00"),
-Empleado(3, "Luis Miguel", "elsol@auracine.com", "5551234567", "EMP103", "ADMIN", "20:00-04:00"),
-Empleado(4, "Christian Nodal", "nodal@auracine.com", "6371234567", "EMP104", "LIMPIEZA", "09:00-17:00"),
-Empleado(5, "Carín León", "carin@auracine.com", "6629876543", "EMP105", "TAQUILLERO", "10:00-18:00"),
-Empleado(6, "Juan Gabriel", "juanga@auracine.com", "6561112222", "EMP106", "ADMIN", "14:00-22:00"),
-Empleado(7, "Vicente Fernández", "chente@auracine.com", "3334445555", "EMP107", "LIMPIEZA", "06:00-14:00"),
-Empleado(8, "Thalía", "thalia@auracine.com", "5512223333", "EMP108", "TAQUILLERO", "08:00-16:00"),
-Empleado(9, "Junior H", "juniorh@auracine.com", "6645556666", "EMP109", "LIMPIEZA", "22:00-06:00"),
-Empleado(10, "Paulina Rubio", "pau@auracine.com", "5598887777", "EMP110", "TAQUILLERO", "11:00-19:00"),
-]
 
 # Variables chachipistachis para el manejo de sesiones (ayuda profe jimmy, esto esta hecho horrible)
 usuario_actual = None
@@ -350,4 +351,5 @@ def menu_principal():
             print("Opcion invalida")
 
 if __name__ == "__main__":
+
     menu_principal()
