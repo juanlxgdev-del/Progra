@@ -8,7 +8,6 @@
 # y en cálculo diferencial con Zamora, asi que mi cerebro estaba alternando
 # entre matrices, derivadas y Python. No recomiendo esa combinacion.
 
-
 class Persona:
     def __init__(self, id, nom, ema, tel):
         self.id = id
@@ -43,7 +42,6 @@ class Persona:
         self.nombre = nom
         self.telefono = tel
         return f"datos actualizados bla bla para {self.nom}"
-
 
 # Aqui empieza Usuario
 # en teoria esto hereda de Persona
@@ -94,7 +92,6 @@ class Usuario(Persona):
 
     def crear_reserva(self, func, cant_asientos):
         return self.hacer_reserva(func, cant_asientos)
-
     # Mostrar puntos
     # aqui ya estaba medio cansado pero queria que funcionara.
 
@@ -119,7 +116,6 @@ class Usuario(Persona):
 
     def marcar_entrada(self):
         return self.login()
-
 
 # Cambio de clase
 # honestamente aqui ya estaba un poco confundido entre UML,
@@ -149,7 +145,6 @@ class Empleado(Persona):
     def gestionar_funciones(self, funcion):
         return self.puede_gestionar(funcion)
 
-
 # Parte de peliculas
 # despues de las matrices de Ariza esto se sintio hasta relajante.
 
@@ -173,7 +168,6 @@ class Pelicula:
     def __str__(self):
         return f"{self.titulo} ({self.gen}) [{self.clas}]"
 
-
 # Clase espacio general
 # aqui empieza la parte de lugares dentro del cine.
 
@@ -191,7 +185,6 @@ class Espacio:
     def limpiar(self):
         self.ok = True
         return f"{self.nom} limpio"
-
 
 # Esta parte de las salas fue de las que mas tiempo me tomo entender
 # no es dificil, pero cuando llevas muchas horas programando
@@ -254,7 +247,6 @@ class Sala(Espacio):
         tipo_vip = "VIP" if self.vip else "normal"
         return f"Sala {self.nom} ({self.tip}) {tipo_vip} - {libres} libres"
 
-
 # Cambio de seccion: comida
 # honestamente aqui ya estaba un poco cansado
 # pero queria que el sistema tuviera tambien esta parte.
@@ -290,7 +282,6 @@ class ZonaComida(Espacio):
     def __str__(self):
         return f"{self.nom} - {len(self.productos)} cosas"
 
-
 class Producto:
     def __init__(self, id, nom, pre, cant):
         self.id = id
@@ -300,7 +291,6 @@ class Producto:
     
     def __str__(self):
         return f"{self.nom} - ${self.pre} ({self.cant})"
-
 
 # Funciones de cine
 # en este punto del codigo ya llevaba bastante rato
@@ -330,7 +320,6 @@ class Funcion:
     def __str__(self):
         return f"[{self.id}] {self.peli.titulo} - {self.hor}"
 
-
 # Promociones
 # esta parte la investigue un poco porque no estaba tan clara en mis notas.
 
@@ -346,7 +335,6 @@ class Promo:
     
     def __str__(self):
         return f"{self.cod} - {self.desc}% - {self.des} (hasta: {self.exp})"
-
 
 # Ultima clase grande: Reserva
 # si el programa llega hasta aqui sin explotar ya es victoria personal.
@@ -410,66 +398,8 @@ class Reserva:
     def __str__(self):
         return f"Reserva {self.id} - {self.usr.nom} - {self.func.peli.titulo} - {self.estado}"
 
-
 # Fin del archivo
 # Profe Jimmy, gracias por revisar el codigo.
 # Despues de entregar esto me voy directo a estudiar
 # para Ariza y calculo diferencial con Zamora.
-# Deséeme suerte.
-
-class Reserva:
-    def __init__(self, id, usr, func, asi, precio):
-        self.id = id
-        self.usr = usr
-        self.func = func
-        self.asi = asi
-        self.precio_total = precio
-        self.estado = 'PENDIENTE'
-    
-    def pagar(self):
-        if self.estado == "PENDIENTE":
-            self.estado = "PAGADA"
-            return True
-        return False
-    
-    # generar ticket sencillo
-
-    def ticket(self):
-        ticket = f"""
-    ================================
-            TICKET DEL CINE
-    ================================
-    
-    Reserva: {self.id}
-    Cliente: {self.usr.nom}
-    Email: {self.usr.ema}
-    
-    Pelicula: {self.func.peli.titulo}
-    Sala: {self.func.sala.nom}
-    Hora: {self.func.hor}
-    Asientos: {', '.join(self.asi)}
-    Total: ${self.precio_total:.2f}
-    Estado: {self.estado}
-    
-    ================================
-"""
-        return ticket
-    
-    def usar_promo(self, promo):
-        desc = self.precio_total - promo.aplicar(self.precio_total)
-        self.precio_total = promo.aplicar(self.precio_total)
-        return desc
-    
-    def cambiar_estado(self, est):
-        self.estado = est
-    
-    def __str__(self):
-        return f"Reserva {self.id} - {self.usr.nom} - {self.func.peli.titulo} - {self.estado}"
-
-
-# Fin del archivo
-# Profe Jimmy, gracias por revisar el codigo.
-# Despues de entregar esto me voy directo a estudiar
-# para Ariza y calculo diferencial con Zamora.
-
 # Deséeme suerte.
