@@ -1,0 +1,171 @@
+#Antes de empezar, profe jimmy, se que no he sido el mejor alumno, 
+#asi que preparese para ver un codigo con errores 
+#Porque claro, al listo de juan luis le encanta hacerlo de ultima hora
+# asi que, tome asiento , leea lineas feas y
+# Lea con atencion estos comentarios, porque la verdad solo falta media hora para entregar el proyecto
+
+class Persona:
+    def __init__(self, id, nombre, email, tel):
+        self.id = id
+        self.nombre = nombre
+        self.email = email
+        self.telefono = tel
+
+    def login(self):
+        print(f"\n- Sesion iniciada: {self.nombre} -")
+
+    def logout(self):
+        print(f"- Sesion cerrada: {self.nombre} -")
+
+class Usuario(Persona):
+    def __init__(self, id, nombre, email, tel):
+        super().__init__(id, nombre, email, tel)
+        self.puntosFidelidad = 0
+        self.reservas = []
+
+    def crearReserva(self, funcion, cantidad):
+        libres = funcion.sala.obtenerLibres()
+        if cantidad > libres:
+            return None
+        asientos = funcion.sala.asignarAsientos(cantidad)
+        precio = funcion.precio * cantidad
+        reserva = Reserva(len(self.reservas) + 1, self, funcion, asientos, precio)
+        self.reservas.append(reserva)
+        self.puntosFidelidad += int(precio / 10)
+        return reserva
+
+class Empleado(Persona):
+    def __init__(self, id, nombre, email, tel, idEmp, rol, horario):
+        super().__init__(id, nombre, email, tel)
+        self.idEmpleado = idEmp
+        self.rol = rol
+        self.horario = horario
+
+    def marcarEntrada(self):
+        return f"{self.nombre} ({self.rol}) - {self.horario}"
+
+class Pelicula:
+    def __init__(self, id, titulo, duracion, clasificacion, genero, sinopsis):
+        self.id = id
+        self.titulo = titulo
+        self.duracion = duracion
+        self.clasificacion = clasificacion
+        self.genero = genero
+        self.sinopsis = sinopsis
+
+    def __str__(self):
+        return f"{self.titulo} ({self.genero}) [{self.clasificacion}] {self.duracion}min"
+
+class Sala:
+    def __init__(self, id, nombre, tipo, capacidad, vip):
+        self.id = id
+        self.nombre = nombre
+        self.tipo = tipo
+        self.capacidad = capacidad
+        self.vip = vip
+        self.asientos = self._generar()
+
+    def _generar(self):
+        asientos = {}
+        filas = ['A','B','C','D','E','F','G','H','I','J']
+        contador = 0
+        for fila in filas:
+            for col in range(1, 11):
+                if contador >= self.capacidad:
+                    return asientos
+                asientos[f"{fila}{col}"] = "libre"
+                contador += 1
+        return asientos
+
+    def obtenerLibres(self):
+        return sum(1 for e in self.asientos.values() if e == "libre")
+
+    def asignarAsientos(self, cantidad):
+        asignados = []
+        for codigo in self.asientos:
+            if self.asientos[codigo] == "libre" and len(asignados) < cantidad:
+                self.asientos[codigo] = "ocupado"
+                asignados.append(codigo)
+        return asignados
+
+    def __str__(self):
+        tipo_vip = "VIP" if self.vip else "NORMAL"
+        return f"Sala {self.nombre} ({self.tipo}) {tipo_vip} - {self.obtenerLibres()} libres"
+
+class Producto:
+    def __init__(self, id, nombre, precio, stock):
+        self.id = id
+        self.nombre = nombre
+        self.precio = precio
+        self.stock = stock
+
+    def __str__(self):
+        return f"[{self.id}] {self.nombre} ${self.precio} (Stock: {self.stock})"
+
+class ZonaComida:
+    def __init__(self, id, nombre, productos):
+        self.id = id
+        self.nombre = nombre
+        self.productos = productos
+
+    def venderPorId(self, id_prod):
+        for p in self.productos:
+            if p.id == id_prod and p.stock > 0:
+                p.stock -= 1
+                return p.precio
+        return 0
+
+class Funcion:
+    def __init__(self, id, pelicula, sala, hora, precio):
+        self.id = id
+        self.pelicula = pelicula
+        self.sala = sala
+        self.hora = hora
+        self.precio = precio
+
+    def __str__(self):
+        return f"[{self.id}] {self.pelicula.titulo} - {self.hora}"
+
+class Promocion:
+    def __init__(self, codigo, descripcion, descuento, vencimiento):
+        self.codigo = codigo
+        self.descripcion = descripcion
+        self.descuento = descuento
+        self.vencimiento = vencimiento
+
+    def aplicar(self, monto):
+        return monto * (1 - self.descuento / 100)
+
+    def __str__(self):
+        return f"{self.codigo} - {self.descuento}% - {self.descripcion}"
+
+class Reserva:
+    def __init__(self, id, usuario, funcion, asientos, precio):
+        self.id = id
+        self.usuario = usuario
+        self.funcion = funcion
+        self.asientos = asientos
+        self.precio = precio
+        self.comida = 0
+        self.estado = "PENDIENTE"
+
+    def generarTicket(self):
+        return f"""
+==============================
+        TICKET AURORA
+==============================
+Reserva: {self.id}
+Cliente: {self.usuario.nombre}
+Pelicula: {self.funcion.pelicula.titulo}
+Sala: {self.funcion.sala.nombre}
+Hora: {self.funcion.hora}
+Asientos: {", ".join(self.asientos)}
+Cine: ${self.precio}
+Comida: ${self.comida}
+Total: ${self.precio + self.comida}
+Estado: {self.estado}
+==============================
+"""
+
+    def __str__(self):
+        return f"Reserva {self.id} - {self.usuario.nombre} - {self.funcion.pelicula.titulo}"
