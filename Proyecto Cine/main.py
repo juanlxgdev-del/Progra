@@ -85,327 +85,205 @@ usuarios = [
 
 # Crear empleados
 empleados = [
-Empleado(1, "Natanael Cano", "nata@auracine.com", "6621234567", "EMP101", "ADMIN", "16:00-00:00"),
-Empleado(2, "Peso Pluma", "hassan@auracine.com", "3312345678", "EMP102", "TAQUILLERO", "18:00-02:00"),
-Empleado(3, "Luis Miguel", "elsol@auracine.com", "5551234567", "EMP103", "ADMIN", "20:00-04:00"),
-Empleado(4, "Christian Nodal", "nodal@auracine.com", "6371234567", "EMP104", "LIMPIEZA", "09:00-17:00"),
-Empleado(5, "Carín León", "carin@auracine.com", "6629876543", "EMP105", "TAQUILLERO", "10:00-18:00"),
-Empleado(6, "Juan Gabriel", "juanga@auracine.com", "6561112222", "EMP106", "ADMIN", "14:00-22:00"),
-Empleado(7, "Vicente Fernández", "chente@auracine.com", "3334445555", "EMP107", "LIMPIEZA", "06:00-14:00"),
-Empleado(8, "Thalía", "thalia@auracine.com", "5512223333", "EMP108", "TAQUILLERO", "08:00-16:00"),
-Empleado(9, "Junior H", "juniorh@auracine.com", "6645556666", "EMP109", "LIMPIEZA", "22:00-06:00"),
-Empleado(10, "Paulina Rubio", "pau@auracine.com", "5598887777", "EMP110", "TAQUILLERO", "11:00-19:00"),
+    Empleado(1, "Natanael Cano", "nata@auracine.com", "6621234567", "EMP101", "ADMIN", "16:00-00:00"),
+    Empleado(2, "Peso Pluma", "hassan@auracine.com", "3312345678", "EMP102", "TAQUILLERO", "18:00-02:00"),
+    Empleado(3, "Luis Miguel", "elsol@auracine.com", "5551234567", "EMP103", "ADMIN", "20:00-04:00"),
+    Empleado(4, "Christian Nodal", "nodal@auracine.com", "6371234567", "EMP104", "LIMPIEZA", "09:00-17:00"),
+    Empleado(5, "Carín León", "carin@auracine.com", "6629876543", "EMP105", "TAQUILLERO", "10:00-18:00"),
+    Empleado(6, "Juan Gabriel", "juanga@auracine.com", "6561112222", "EMP106", "ADMIN", "14:00-22:00"),
+    Empleado(7, "Vicente Fernández", "chente@auracine.com", "3334445555", "EMP107", "LIMPIEZA", "06:00-14:00"),
+    Empleado(8, "Thalía", "thalia@auracine.com", "5512223333", "EMP108", "TAQUILLERO", "08:00-16:00"),
+    Empleado(9, "Junior H", "juniorh@auracine.com", "6645556666", "EMP109", "LIMPIEZA", "22:00-06:00"),
+    Empleado(10, "Paulina Rubio", "pau@auracine.com", "5598887777", "EMP110", "TAQUILLERO", "11:00-19:00"),
 ]
-
-
-# Crear zona de comida
-zona_comida = ZonaComida(1, "Concesion Principal", "Entrada principal")
-for productoo in productos:
-    zona_comida.agregar(productoo)
-
-# Variables chachipistachis para el manejo de sesiones (ayuda profe jimmy, esto esta hecho horrible)
-usuario_actual = None
-empleado_actual = None
-
+# login
+# login del cliente usando solo email
 def login_usuario():
     global usuario_actual
-    
-    print("\n" + "="*60)
-    print("LOGIN USUARIO")
-    print("="*60)
-    emaill = input("Ingresa tu email: ")
-    
-    for i in range(len(usuarios)):
-        if usuarios[i].email == emaill:
-            print("Bienvendiio " + usuarios[i].nombre)
-            usuarios[i].login()
-            usuario_actual = usuarios[i]
-            return True  
+    email=input("Email: ")
+    for u in usuarios:
+        if u.email==email:
+            usuario_actual=u
+            print("Bienvenido",u.nombre)
+            return True
+    print("Usuario no encontrado")
     return False
 
+# login empleados y marcar asistencia
 def login_empleado():
     global empleado_actual
-    
-    print("\n" + "="*60)
-    print("LOGIN EMPLEADO")
-    print("="*60)
-    emaill = input("Ingresa tu email: ")
-    
-    for i in range(len(empleados)):
-        if empleados[i].email == emaill:
-            print(f"Bienvendiio " + empleados[i].nombre + " (" + empleados[i].rol + ")")
-            empleados[i].login()
-            empleado_actual = empleados[i]
+    email=input("Email: ")
+    for e in empleados:
+        if e.email==email:
+            empleado_actual=e
+            print("Bienvenido",e.nombre,"-",e.rol)
+            print(empleado_actual.marcar_entrada())
             return True
-
-    print("Email no encontrado")
+    print("Empleado no encontrado")
     return False
 
-# ===== MENU USUARIO =====
-def menu_ver_peliculas():
-    print("\n" + "="*60)
-    print("PELICULAS DISPONIBLES")
-    print("="*60)
-    for i, peliculaa in enumerate(peliculas, 1):
-        print(f"{i}. {peliculaa}")
-        print(f"   Duracion: {peliculaa.duracion} minutos")
-        print(f"   Sinopsis: {peliculaa.obtener_sinopsis()}")
+# usuario
+# mostrar peliculas
+def ver_peliculas():
+    for i,p in enumerate(peliculas,1):
+        print(i,"-",p)
+
+# mostrar funciones y asientos disponibles
+def ver_funciones():
+    for i,f in enumerate(funciones,1):
+        disp=f.calcular_asientos_disponibles()
+        print(i,"-",f)
+        print("Sala:",f.sala.nombre)
+        print("Disponibles:",disp)
+        print("Precio:",f.precio_base)
         print()
 
-def menu_ver_funciones():
-    print("\n" + "="*60)
-    print("FUNCIONES DISPONIBLES")
-    print("="*60)
-    for i, funcionn in enumerate(funciones, 1):
-        disponibless = funcionn.calcular_asientos_disponibles()
-        print(f"{i}. {funcionn}")
-        print(f"   Sala: {funcionn.sala.nombre} ({funcionn.sala.tipo})")
-        print(f"   Asientos disponibles: {disponibless}")
-        print(f"   Precio: ${funcionn.precio_base}")
-        print()
-
-def menu_ver_alimentos():
-    print("\n" + "="*60)
-    print(f"ALIMENTOS - {zona_comida.nombre}")
-    print("="*60)
-    for productoo in zona_comida.lista_productos:
-        print(f"- {productoo}")
+# alimentos del cine
+def ver_alimentos():
+    print("\nALIMENTOS DISPONIBLES")
+    for p in productos:
+        print("-",p)
     print()
 
-# Menu de promociones para usuarios
-def menu_ver_promociones():
-    print("\n" + "="*60)
-    print("PROMOCIONES DISPONIBLES")
-    print("="*60)
-    for i, promoo in enumerate(promociones, 1):
-        print(f"{i}. {promoo}")
-    print()
+# promociones disponibles
+def ver_promos():
+    print("PROMOCIONES")
+    for p in promociones:
+        print("-",p)
 
-def menu_aplicar_promocion():
-    if not usuario_actual: print("Debes iniciar sesion"); return
-    if not usuario_actual.reservas_activas: print("No tienes reservas activas"); return
-
-    print("\n" + "="*60)
-    print("APLICAR PROMOCION A RESERVA")
-    print("="*60)
-    
-    # Mostrar reservas
-    print("\nTUS RESERVAS:")
-    i=1
-    for r in usuario_actual.reservas_activas: print(str(i) + ". " + str(r)); i+=1
-
-    e = input("Selecciona reserva (numero): ")
-    if e.isdigit():
-        idx = int(e)-1
-        if 0<=idx<len(usuario_actual.reservas_activas):
-            reservaa = usuario_actual.reservas_activas[idx]
-            
-            # Mostrar promociones
-            print("\n" + "="*60)
-            print("PROMOCIONES DISPONIBLES")
-            print("="*60)
-            for i, promoo in enumerate(promociones, 1):
-                print(f"{i}. {promoo}")
-            print()
-            
-            p = input("Selecciona promocion (numero): ")
-            if p.isdigit():
-                p_idx = int(p)-1
-                if 0<=p_idx<len(promociones):
-                    promoo = promociones[p_idx]
-                    descuentoo = reservaa.usar_promo(promoo)
-                    print(f"\nPromocion aplicada: {promoo.cod}")
-                    print(f"Descuento: ${descuentoo:.2f}")
-                    print(f"Nuevo total: ${reservaa.precio_total:.2f}")
-                else: print("Opcion invalida")
-            else: print("Opcion invalida")
-        else: print("Numero invalido")
-    else: print("Error en la seleccion")
-
-def menu_realizar_reserva():
-    if not usuario_actual:
-        print("Debes iniciar sesion")
+# reservar asientos
+def reservar():
+    ver_funciones()
+    f=int(input("Funcion: "))-1
+    if f<0 or f>=len(funciones):
+        print("Funcion invalida")
         return
-    
-    menu_ver_funciones()
-
-# Seleccionar función
-    entrada_funcion = input("Selecciona una funcion (numero): ")
-    if entrada_funcion.isdigit():
-        funcion_idx = int(entrada_funcion) - 1
-        if funcion_idx >= 0 and funcion_idx < len(funciones):
-            funcionn = funciones[funcion_idx]
-        
-            # Cantidad de asientos
-            entrada_cantidad = input("Cantidad de asientos: ")
-            if entrada_cantidad.isdigit():
-                cantidadd = int(entrada_cantidad)
-                
-                reservaa = usuario_actual.crear_reserva(funcionn, cantidadd)
-                
-                if reservaa:
-                    print("\nReserva creada exitosamente")
-                    print("ID Reserva: " + str(reservaa.id_reserva))
-                    print("Asientos: " + ", ".join(reservaa.asientos))
-                    print("Costo: $" + str(reservaa.costo_total))
-                    
-                    confirmarr = input("\nDeseas confirmar el pago? (si/no): ")
-                    if confirmarr.lower() == "si":
-                        reservaa.confirmar_pago()
-                        print("Pago confirmado")
-                        print(reservaa.generar_ticket())
-                    else:
-                        print("Reserva pendiente de pago")
-                else:
-                    print("No hay suficientes asientos disponibles")
-            else:
-                print("Cantidad invalida")
-        else:
-            print("Opcion invalida")
+    cantidad=int(input("Cuantos asientos: "))
+    funcion=funciones[f]
+    reserva=usuario_actual.crear_reserva(funcion,cantidad)
+    if reserva:
+        print("Reserva creada")
+        print("Asientos:",reserva.asientos)
+        pagar=input("Pagar ahora? si/no ")
+        if pagar=="si":
+            reserva.confirmar_pago()
+            print("Pago realizado")
+            print(reserva.generar_ticket())
     else:
-        print("Opcion invalida")
+        print("No hay suficientes asientos")
 
-def menu_cancelar_reserva():
-    if not usuario_actual: print("Debes iniciar sesion"); return
-    if not usuario_actual.reservas_activas: print("No tienes reservas activas"); return
-
-    print("\n" + "="*60 + "\nTUS RESERVAS\n" + "="*60)
-    i=1
-    for r in usuario_actual.reservas_activas: print(str(i) + ". " + str(r)); i+=1
-
-    e = input("Selecciona reserva a cancelar (numero): ")
-    if e.isdigit():
-        idx = int(e)-1
-        if 0<=idx<len(usuario_actual.reservas_activas):
-            r = usuario_actual.reservas_activas[idx]
-            usuario_actual.cancelar_reserva(r.id_reserva)
-            r.funcion.sala.liberar_asientos(r.asientos)
-            print("Reserva cancelada exitosamente")
-        else: print("Numero invalido")
-    else: print("Error en la cancelacion")
-
-def menu_mis_datos():
-    if not usuario_actual:
-        print("Debes iniciar sesion")
+# cancelar reserva
+def cancelar():
+    if not usuario_actual.reservas_activas:
+        print("No tienes reservas")
         return
-    
-    print("\n" + "="*60)
-    print("MIS DATOS")
-    print("="*60)
-    print(f"Nombre: {usuario_actual.nombre}")
-    print(f"Email: {usuario_actual.email}")
-    print(f"Telefono: {usuario_actual.telefono}")
-    print(f"Puntos de fidelidad: {usuario_actual.puntos_fidelidad}")
-    print(f"Reservas activas: {len(usuario_actual.reservas_activas)}")
-    print()
+    for i,r in enumerate(usuario_actual.reservas_activas,1):
+        print(i,"-",r)
+    x=int(input("Cancelar cual: "))-1
+    reserva=usuario_actual.reservas_activas[x]
+    usuario_actual.cancelar_reserva(reserva.id_reserva)
+    reserva.funcion.sala.liberar_asientos(reserva.asientos)
+    print("Reserva cancelada")
 
-def menu_usuario_principal():
-    while 1:
-        print("\n" + "="*60 + "\nMENU USUARIO - " + usuario_actual.nombre + "\n" + "="*60 + "\n1. Ver peliculas\n2. Ver funciones\n3. Ver alimentos\n4. Ver promociones\n5. Realizar reserva\n6. Cancelar reserva\n7. Aplicar promocion\n8. Ver mis datos\n9. Cerrar sesion\n" + "="*60)
-        
-        o = input("Selecciona opcion: ")
-        
-        if o=="1": menu_ver_peliculas()
-        elif o=="2": menu_ver_funciones()
-        elif o=="3": menu_ver_alimentos()
-        elif o=="4": menu_ver_promociones()
-        elif o=="5": menu_realizar_reserva()
-        elif o=="6": menu_cancelar_reserva()
-        elif o=="7": menu_aplicar_promocion()
-        elif o=="8": menu_mis_datos()
-        elif o=="9": usuario_actual.logout(); print("Sesion cerrada"); break
-        else: print("Opcion invalida")
+# menu usuario
+def menu_usuario():
+    while True:
+        print("\nCINE AURORA")
+        print("1 Ver peliculas")
+        print("2 Ver funciones")
+        print("3 Ver alimentos")
+        print("4 Ver promociones")
+        print("5 Reservar asientos")
+        print("6 Cancelar reserva")
+        print("7 Salir")
+        op=input("> ")
+        if op=="1":ver_peliculas()
+        elif op=="2":ver_funciones()
+        elif op=="3":ver_alimentos()
+        elif op=="4":ver_promos()
+        elif op=="5":reservar()
+        elif op=="6":cancelar()
+        elif op=="7":break
 
-#Agradecimientos especiales para el canal de Marco Vega Gallardo, si profe, me robe ideas de youtube
+# empleado
+# agregar pelicula
+def agregar_pelicula():
+    nombre=input("Nombre: ")
+    dur=int(input("Duracion: "))
+    clas=input("Clasificacion: ")
+    gen=input("Genero: ")
+    sin=input("Sinopsis: ")
+    nueva=Pelicula(len(peliculas)+1,nombre,dur,clas,gen,sin)
+    peliculas.append(nueva)
+    print("Pelicula agregada")
 
-# MENU EMPLEADO
-def menu_empleado_marcar_entrada():
-    print("\n" + empleado_actual.marcar_entrada())
+# crear funcion
+def agregar_funcion():
+    print("Peliculas:")
+    for i,p in enumerate(peliculas,1):
+        print(i,p)
+    p=int(input("Pelicula: "))-1
+    print("Salas:")
+    for i,s in enumerate(salas,1):
+        print(i,s)
+    s=int(input("Sala: "))-1
+    hora=input("Hora: ")
+    precio=float(input("Precio: "))
+    nueva=Funcion(len(funciones)+1,peliculas[p],salas[s],hora,precio)
+    funciones.append(nueva)
+    print("Funcion agregada")
 
-def menu_empleado_gestionar_funciones():
-    print("\n" + "="*60 + "\nGESTIONAR FUNCIONES\n" + "="*60)
-    i=1
-    for f in funciones:
-        print(str(i) + ". " + str(f) + "\n   Asientos disponibles: " + str(f.calcular_asientos_disponibles()))
-        i+=1
-    
-    e = input("Selecciona una funcion (numero): ")
-    if e.isdigit():
-        idx = int(e)-1
-        if 0<=idx<len(funciones):
-            print(empleado_actual.gestionar_funciones(funciones[idx]))
-        else: print("Opcion invalida")
-    else: print("Opcion invalida")
+# agregar promo
+def agregar_promocion():
+    cod=input("Codigo: ")
+    desc=input("Descripcion: ")
+    porc=int(input("Descuento %: "))
+    fecha=input("Fecha fin: ")
+    nueva=Promo(cod,desc,porc,fecha)
+    promociones.append(nueva)
+    print("Promo agregada")
 
-def menu_empleado_limpiar_sala():
-    print("\n" + "="*60 + "\nLIMPIAR SALA\n" + "="*60)
-    i=1
-    for s in salas:
-        print(str(i) + ". " + str(s))
-        i+=1
-    
-    e = input("Selecciona sala a limpiar (numero): ")
-    if e.isdigit():
-        idx = int(e)-1
-        if 0<=idx<len(salas):
-            print(salas[idx].limpiar())
-        else: print("Opcion invalida")
-    else: print("Opcion invalida")
+# menu empleado
+def menu_empleado():
+    while True:
+        print("\nMENU EMPLEADO")
+        print("1 Ver funciones")
+        print("2 Limpiar sala")
+        print("3 Ver reservas")
+        print("4 Agregar pelicula")
+        print("5 Agregar funcion")
+        print("6 Agregar promocion")
+        print("7 Salir")
+        op=input("> ")
+        if op=="1":ver_funciones()
+        elif op=="2":
+            for i,s in enumerate(salas,1):
+                print(i,s)
+            x=int(input("Sala: "))-1
+            print(salas[x].limpiar())
+        elif op=="3":
+            for u in usuarios:
+                for r in u.historial_reservas:
+                    print(r)
+        elif op=="4":agregar_pelicula()
+        elif op=="5":agregar_funcion()
+        elif op=="6":agregar_promocion()
+        elif op=="7":break
 
-def menu_empleado_ver_reservas():
-    print("\n" + "="*60 + "\nRESERVAS DEL SISTEMA\n" + "="*60)
-    
-    totall=0
-    for u in usuarios:
-        if u.historial_reservas:
-            print("\nUsuario: " + u.nombre)
-            for r in u.historial_reservas:
-                print("  - " + str(r))
-                totall+=1
-    
-    if totall==0: print("No hay reservas en el sistema")
-
-def menu_empleado_principal():
-    continuarr = 1
-    while continuarr:
-        print("\n" + "="*60 + "\nMENU EMPLEADO - " + empleado_actual.nombre + "\nRol: " + empleado_actual.rol + "\n" + "="*60 + "\n1. Marcar entrada\n2. Gestionar funciones\n3. Limpiar sala\n4. Ver reservas\n5. Cerrar sesion\n" + "="*60)
-        
-        o = input("Selecciona opcion: ")
-        
-        if o=="1": menu_empleado_marcar_entrada()
-        elif o=="2": menu_empleado_gestionar_funciones()
-        elif o=="3": menu_empleado_limpiar_sala()
-        elif o=="4": menu_empleado_ver_reservas()
-        elif o=="5": empleado_actual.logout(); print("Sesion cerrada"); continuarr = 0
-        else: print("Opcion invalida")
-
-
-#MENU PRINCIPAL
+# menu
+# entrada del sistema
 def menu_principal():
-    global usuario_actual, empleado_actual
-    continuarr = 1
-    while continuarr:
-        print("\n" + "="*60 + "\nSISTEMA DE CINE\n" + "="*60 + "\n1. Login Usuario\n2. Login Empleado\n3. Salir\n" + "="*60)
-        
-        o = input("Selecciona opcion: ")
-        
-        if o=="1":
-            if login_usuario():
-                menu_usuario_principal()
-                usuario_actual = None
-        elif o=="2":
-            if login_empleado():
-                menu_empleado_principal()
-                empleado_actual = None
-        elif o=="3":
-            print("Bye!")
-            break
-        else:
-            print("Opcion invalida")
+    while True:
+        print("\nCINE AURORA")
+        print("1 Login usuario")
+        print("2 Login empleado")
+        print("3 Salir")
+        op=input("> ")
+        if op=="1":
+            if login_usuario():menu_usuario()
+        elif op=="2":
+            if login_empleado():menu_empleado()
+        elif op=="3":break
 
-if __name__ == "__main__":
-    menu_principal()
-
-    menu_principal()
-
-
+# iniciar programa
+menu_principal()
